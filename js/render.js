@@ -68,10 +68,13 @@
     // access dom for canvas
     var canvas = document.getElementById("puzzle");
     var ctx = canvas.getContext("2d");
+    canvas.height = canvas.width;
+    var numRows = 5;
+    var cellSize = canvas.width/numRows;
     var cfg = {
-      numRows: 5,
-      numCols: 5,
-      cellSize: 40,
+      numRows: numRows,
+      numCols: numRows,
+      cellSize: cellSize,
       startSym: "0",
       targetSym: "X",
       obstacleSym: "#",
