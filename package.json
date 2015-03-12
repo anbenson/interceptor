@@ -1,0 +1,29 @@
+{
+  "name": "interceptor",
+  "version": "1.0.0",
+  "description": "collaborative maze with intercepted communication",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anbenson/interceptor.git"
+  },
+  "keywords": [
+    "interceptor",
+    "15-112",
+    "15112"
+  ],
+  "author": "Andrew Benson",
+  "license": "none",
+  "bugs": {
+    "url": "https://github.com/anbenson/interceptor/issues"
+  },
+  "homepage": "https://github.com/anbenson/interceptor",
+  "dependencies": {
+    "express": "^4.12.2",
+    "socket.io": "^1.3.5"
+  }
+}
