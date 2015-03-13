@@ -65,6 +65,7 @@
       }
     }
     
+    var socket = io();
     // access dom for canvas
     var canvas = document.getElementById("puzzle");
     var ctx = canvas.getContext("2d");

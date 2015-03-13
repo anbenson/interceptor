@@ -6,14 +6,23 @@
 var express = require("express");
 var app = express();
 var http = require("http").Server(app);
+var io = require("socket.io")(http);
 
 // static files
 app.use("/js", express.static(__dirname+"/js"));
 app.use("/css", express.static(__dirname+"/css"));
 
-// routing
+// http routing
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/html/index.html");
+});
+
+// socket.io routing
+io.on("connection", function(socket) {
+  console.log("new connection...");
+  socket.on("disconnect", function() {
+    console.log("socket disconnected...");
+  });
 });
 
 // actually listen
