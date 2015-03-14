@@ -60,6 +60,32 @@
         }
       }
     }
+    var currDotInterval = null;
+    var currDotTimeout = null;
+    function drawBlinkingDot(ctx, puzzleCfg, viewCfg, puzzle, coords, color) {
+      if (currDotTimeout) {
+        clearTimeout(currDotTimeout);
+      }
+      if (currDotInterval) {
+        clearInterval(currDotInterval);
+      }
+      var blink = function() {
+        var oldColor = ctx.fillStyle;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc((coords[1]+0.5)*viewCfg.cellSize,
+                (coords[0]+0.5)*viewCfg.cellSize,
+                0.2*viewCfg.cellSize, 0, 2*Math.PI, false);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = oldColor;
+        currDotTimeout = setTimeout(function() {
+          drawPuzzle(ctx, puzzleCfg, viewCfg, puzzle);
+        }, 400);
+      };
+      blink();
+      currDotInterval = setInterval(blink, 500);
+    }
     
     // access dom for canvas
     var canvas = document.getElementById("puzzle");
