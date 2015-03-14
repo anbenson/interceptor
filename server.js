@@ -18,6 +18,9 @@ app.use("/css", express.static(__dirname+"/css"));
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/html/index.html");
 });
+app.get("/2", function(req, res) {
+  res.sendFile(__dirname + "/html/index2.html");
+});
 
 // socket.io routing
 // clients must be able to receive the following events:

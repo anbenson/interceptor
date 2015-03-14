@@ -1,4 +1,4 @@
-// render.js
+// render2.js
 // Andrew Benson
 // Renders a string-encoded puzzle to the canvas.
 ;(function(){
@@ -118,7 +118,7 @@
                       "red");
       console.log(observerHint);
     });
-    socket.emit("register", "test", "test", false);
+    socket.emit("register", "test", "test", true);
     window.addEventListener("keydown", function(e) {
       console.log(e);
       // note: the following code is a deprecated API, but stupid Chrome/Safari
