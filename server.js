@@ -57,12 +57,16 @@ io.on("connection", function(socket) {
       socket.emit("puzzleUpdate",
                   JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
                                                         team.puzzleConfig)),
-                  JSON.stringify(team.puzzleConfig));
+                  JSON.stringify(team.puzzleConfig),
+                  JSON.stringify(puzzle.modifyHint(team.currPuzzle,
+                                                   team.observerHint,
+                                                   team.puzzleMod)));
     }
     else {
       socket.emit("puzzleUpdate",
                   JSON.stringify(team.currPuzzle),
-                  JSON.stringify(team.puzzleConfig));
+                  JSON.stringify(team.puzzleConfig),
+                  JSON.stringify(team.observerHint));
     }
     console.log("registered "+teamname+" with "+(isPlayer?"player":"observer"));
   });
@@ -83,12 +87,47 @@ io.on("connection", function(socket) {
       team.player.emit("puzzleUpdate",
                        JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
                                                            team.puzzleConfig)),
-                       JSON.stringify(team.puzzleConfig));
+                       JSON.stringify(team.puzzleConfig),
+                       JSON.stringify(puzzle.modifyHint(team.currPuzzle,
+                                                        team.observerHint,
+                                                        team.puzzleMod)));
     }
     if (team.observer) {
       team.observer.emit("puzzleUpdate",
                          JSON.stringify(team.currPuzzle),
-                         JSON.stringify(team.puzzleConfig));
+                         JSON.stringify(team.puzzleConfig),
+                         JSON.stringify(team.observerHint));
+    }
+  });
+  socket.on("hint", function(coords) {
+    console.log("received hint request");
+    var team = puzzleTeams.lookup(socket);
+    // only accept hints if registered
+    if (!team) {
+      socket.emit("puzzleError", "please register first");
+      return;
+    }
+    // only accept hints if observer
+    if (!(team.observer && socket.id === team.observer.id)) {
+      return;
+    }
+    // update observerHint and update everyone
+    var parsedCoords = JSON.parse(coords);
+    team.observerHint = parsedCoords;
+    if (team.player) {
+      team.player.emit("puzzleUpdate",
+                       JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
+                                                           team.puzzleConfig)),
+                       JSON.stringify(team.puzzleConfig),
+                       JSON.stringify(puzzle.modifyHint(team.currPuzzle,
+                                                        team.observerHint,
+                                                        team.puzzleMod)));
+    }
+    if (team.observer) {
+      team.observer.emit("puzzleUpdate",
+                         JSON.stringify(team.currPuzzle),
+                         JSON.stringify(team.puzzleConfig),
+                         JSON.stringify(team.observerHint));
     }
   });
   // disconnect: unregister socket in server records

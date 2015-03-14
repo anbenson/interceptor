@@ -106,8 +106,14 @@
     socket.on("puzzleError", function(msg) {
       console.log(msg);
     });
-    socket.on("puzzleUpdate", function(puzzle, puzzleCfg) {
-      drawPuzzle(ctx, JSON.parse(puzzleCfg), viewCfg, JSON.parse(puzzle));
+    socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint) {
+      var parsedPuzzleCfg = JSON.parse(puzzleCfg);
+      var parsedPuzzle = JSON.parse(puzzle);
+      var parsedHint = JSON.parse(observerHint);
+      drawPuzzle(ctx, parsedPuzzleCfg, viewCfg, parsedPuzzle);
+      drawBlinkingDot(ctx, parsedPuzzleCfg, viewCfg, parsedPuzzle, parsedHint,
+                      "red");
+      console.log(observerHint);
     });
     socket.emit("register", "test", "test", true);
     window.addEventListener("keydown", function(e) {
