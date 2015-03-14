@@ -69,11 +69,15 @@ io.on("connection", function(socket) {
   socket.on("move", function(dir) {
     console.log("received move request");
     var team = puzzleTeams.lookup(socket);
+    // only move if registered
     if (!team) {
       socket.emit("puzzleError", "please register first");
       return;
     }
-    puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
+    // only move if player
+    if (team.player && socket.id === team.player.id) {
+      puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
+    }
     if (team.player) {
       team.player.emit("puzzleUpdate",
                        JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
