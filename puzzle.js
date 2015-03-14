@@ -79,5 +79,16 @@ module.exports = {
       }
     }
     return result;
+  },
+  // if there's still a target, you haven't won yet
+  isWon: function(puzzle, config) {
+    for (var row = 0; row < puzzle.length; row++) {
+      for (var col = 0; col < puzzle[row].length; col++) {
+        if (puzzle[row][col] === config.targetSym) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 };
