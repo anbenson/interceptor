@@ -62,9 +62,6 @@ function PuzzleTeams() {
     var team = null;
     for (var i = 0; i < this.teams.length; i++) {
       if (this.teams[i].iden === iden) {
-        if (this.teams[i].player) {
-          return false;
-        }
         team = this.teams[i];
         break;
       }
@@ -86,9 +83,6 @@ function PuzzleTeams() {
     var team = null;
     for (var i = 0; i < this.teams.length; i++) {
       if (this.teams[i].iden === iden) {
-        if (this.teams[i].observer) {
-          return false;
-        }
         team = this.teams[i];
         break;
       }
