@@ -51,7 +51,7 @@ module.exports = {
         break;
       }
       case "D": {
-        if (startCol === puzzle.length-1 ||
+        if (startRow === puzzle.length-1 ||
             puzzle[startRow+1][startCol] === config.obstacleSym) {
           return false;
         }
