@@ -63,6 +63,9 @@
     var currDotInterval = null;
     var currDotTimeout = null;
     function drawBlinkingDot(ctx, puzzleCfg, viewCfg, puzzle, coords, color) {
+      if (!coords) {
+        return;
+      }
       if (currDotTimeout) {
         clearTimeout(currDotTimeout);
       }

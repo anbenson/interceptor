@@ -94,6 +94,10 @@ module.exports = {
   },
   // the modification made to the observer's hint
   modifyHint: function(puzzle, hint, mod) {
+    // if there is no hint, don't do anything
+    if (!hint) {
+      return hint;
+    }
     var newHint = [hint[0], hint[1]];
     if (!(hint[0]+mod[0] < 0 || hint[0]+mod[0] > puzzle.length-1)) {
       newHint[0] = hint[0]+mod[0];
