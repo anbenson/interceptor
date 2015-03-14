@@ -64,5 +64,20 @@ module.exports = {
       }
     }
     return true;
+  },
+  removeObstacles: function(puzzle, config) {
+    var result = [];
+    for (var row = 0; row < puzzle.length; row++) {
+      result.push([]);
+      for (var col = 0; col < puzzle[row].length; col++) {
+        if (puzzle[row][col] === config.obstacleSym) {
+          result[row].push(config.emptySym);
+        }
+        else {
+          result[row].push(puzzle[row][col]);
+        }
+      }
+    }
+    return result;
   }
 };

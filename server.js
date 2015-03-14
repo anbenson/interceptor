@@ -53,9 +53,17 @@ io.on("connection", function(socket) {
       return;
     }
     var team = puzzleTeams.lookup(socket);
-    socket.emit("puzzleUpdate",
-                JSON.stringify(team.currPuzzle),
-                JSON.stringify(team.puzzleConfig));
+    if (isPlayer) {
+      socket.emit("puzzleUpdate",
+                  JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
+                                                        team.puzzleConfig)),
+                  JSON.stringify(team.puzzleConfig));
+    }
+    else {
+      socket.emit("puzzleUpdate",
+                  JSON.stringify(team.currPuzzle),
+                  JSON.stringify(team.puzzleConfig));
+    }
     console.log("registered "+teamname+" with "+(isPlayer?"player":"observer"));
   });
   socket.on("move", function(dir) {
@@ -66,13 +74,17 @@ io.on("connection", function(socket) {
       return;
     }
     puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
-    [team.player, team.observer].forEach(function(socket) {
-      if (socket) {
-        socket.emit("puzzleUpdate",
-                    JSON.stringify(team.currPuzzle),
-                    JSON.stringify(team.puzzleConfig));
-      }
-    });
+    if (team.player) {
+      team.player.emit("puzzleUpdate",
+                       JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
+                                                           team.puzzleConfig)),
+                       JSON.stringify(team.puzzleConfig));
+    }
+    if (team.observer) {
+      team.observer.emit("puzzleUpdate",
+                         JSON.stringify(team.currPuzzle),
+                         JSON.stringify(team.puzzleConfig));
+    }
   });
   // disconnect: unregister socket in server records
   socket.on("disconnect", function() {
