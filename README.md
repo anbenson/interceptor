@@ -35,7 +35,7 @@ The `puzzleError` message is sent when...you cause an error. You can do what you
 Parameters:
 - msg: a string containing an error message. typically unhelpful.
 
-### socket.on("puzzleUpdate", function(puzzle, puzzleConfig){})
+### socket.on("puzzleUpdate", function(puzzle, puzzleConfig, observerHint){})
 The `puzzleUpdate` message is sent whenever the puzzle state has changed, or whenever the server feels like it. It's best not to wonder why and to just draw the puzzle.
 
 Parameters:
@@ -48,3 +48,4 @@ playerSym   | string | the character used to denote the player's position in the
 targetSym   | string | the character used to denote the position in the puzzle the player is trying to get to
 obstacleSym | string | the character used to denote an obstacle in the puzzle
 emptySym    | string | the character used to denote an empty space in the puzzle
+- observerHint: an array of length 2 in JSON form containing coordinates in the puzzle where the observer thinks the player should go (but modified by the server).
