@@ -8,6 +8,7 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var puzzleTeams = require("./puzzleTeams")();
+var puzzle = require("./puzzle");
 
 // static files
 app.use("/js", express.static(__dirname+"/js"));
@@ -20,9 +21,9 @@ app.get("/", function(req, res) {
 
 // socket.io routing
 // clients must be able to receive the following events:
-// puzzleError
+// puzzleError, puzzleUpdate
 // clients must be able to send the following events:
-// register
+// register, move
 io.on("connection", function(socket) {
   console.log("new connection...");
   // register: register socket with team in server records so we know who they
@@ -43,7 +44,7 @@ io.on("connection", function(socket) {
     else {
       success = puzzleTeams.setObserver(socket, teamname);
     }
-    // log results
+    // log results and send initial puzzle
     if (!success) {
       socket.emit("puzzleError", "could not register; are you already "+
                     " registered, or do you have the wrong password?");
@@ -51,7 +52,27 @@ io.on("connection", function(socket) {
                   " with "+(isPlayer?"player":"observer"));
       return;
     }
+    var team = puzzleTeams.lookup(socket);
+    socket.emit("puzzleUpdate",
+                JSON.stringify(team.currPuzzle),
+                JSON.stringify(team.puzzleConfig));
     console.log("registered "+teamname+" with "+(isPlayer?"player":"observer"));
+  });
+  socket.on("move", function(dir) {
+    console.log("received move request");
+    var team = puzzleTeams.lookup(socket);
+    if (!team) {
+      socket.emit("puzzleError", "please register first");
+      return;
+    }
+    puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
+    [team.player, team.observer].forEach(function(socket) {
+      if (socket) {
+        socket.emit("puzzleUpdate",
+                    JSON.stringify(team.currPuzzle),
+                    JSON.stringify(team.puzzleConfig));
+      }
+    });
   });
   // disconnect: unregister socket in server records
   socket.on("disconnect", function() {

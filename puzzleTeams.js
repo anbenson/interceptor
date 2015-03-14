@@ -1,3 +1,7 @@
+// puzzleTeams.js
+// Andrew Benson
+// module that handles puzzleTeams
+
 // object that keeps track of socket-team associations
 // register sockets with setPlayer and setObserver
 // lookup teams with lookup and delete sockets with delete
@@ -6,8 +10,22 @@ function PuzzleTeams() {
   // maps socket ids to teams
   this.socketMap = {};
   // list of registered teams. should be read-only, except for structs within.
-  this.teams = [{"iden": "test", "currPuzzle":"0   ## #     ## #  #### X",
-                 "player": null, "observer": null}];
+  this.teams = [{"iden": "test",
+                 "password": "test",
+                 "player": null,
+                 "observer": null,
+                 "puzzleConfig": {
+                   playerSym: "0",
+                   targetSym: "X",
+                   obstacleSym: "#",
+                   emptySym: " "
+                 },
+                 "currPuzzle": [["0"," "," "," ","#"],
+                                ["#"," ","#"," "," "],
+                                [" "," "," ","#","#"],
+                                [" ","#"," "," ","#"],
+                                ["#","#","#"," ","X"]]
+                 }];
   // most methods return a boolean (whether they succeeded)
   
   // given a socket, find the corresponding team if it exists

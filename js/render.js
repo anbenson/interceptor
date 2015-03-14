@@ -4,7 +4,7 @@
 ;(function(){
   window.onload = function() {
     // helper functions
-    function drawCell(cfg, ctx, row, col, color, shape) {
+    function drawCell(ctx, cfg, row, col, color, shape) {
       // save old color, just in case
       var old = ctx.fillStyle;
       // set color, and draw shape
@@ -30,65 +30,84 @@
       // restore old color
       ctx.fillStyle = old;
     }
-    function drawFromString(cfg, ctx, puzzleStr) {
-      // check dimensions as a courtesy
-      if (puzzleStr.length !== cfg.numRows*cfg.numCols) {
-        console.log("warning: puzzleStr had unexpected length "+
-                    puzzleStr.length.toString()+" (not "+
-                    (cfg.numRows*cfg.numCols).toString()+")");
-      }
-      for (var i = 0; i < puzzleStr.length; i++) {
-        var row = Math.floor(i / cfg.numCols);
-        var col = i % cfg.numCols;
-        switch (puzzleStr[i]) {
-          case cfg.startSym: {
-            drawCell(cfg, ctx, row, col, cfg.startColor, "circle");
-            break;
-          }
-          case cfg.targetSym: {
-            drawCell(cfg, ctx, row, col, cfg.targetColor, "square");
-            break;
-          }
-          case cfg.obstacleSym: {
-            drawCell(cfg, ctx, row, col, cfg.obstacleColor, "square");
-            break;
-          }
-          case cfg.emptySym: {
-            drawCell(cfg, ctx, row, col, cfg.emptyColor, "square");
-            break;
-          }
-          default: {
-            console.log("warning: puzzleStr had unexpected symbol: "+
-            puzzleStr[i]);
+    
+    function drawPuzzle(ctx, puzzleCfg, viewCfg, puzzle) {
+      for (var row = 0; row < puzzle.length; row++) {
+        for (var col = 0; col < puzzle[row].length; col++) {
+          switch (puzzle[row][col]) {
+            case puzzleCfg.playerSym: {
+              drawCell(ctx, viewCfg, row, col, viewCfg.playerColor, "circle");
+              break;
+            }
+            case puzzleCfg.targetSym: {
+              drawCell(ctx, viewCfg, row, col, viewCfg.targetColor, "square");
+              break;
+            }
+            case puzzleCfg.obstacleSym: {
+              drawCell(ctx, viewCfg, row, col, viewCfg.obstacleColor, "square");
+              break;
+            }
+            case puzzleCfg.emptySym: {
+              drawCell(ctx, viewCfg, row, col, viewCfg.emptyColor, "square");
+              break;
+            }
+            default: {
+              console.log("warning: puzzleStr had unexpected symbol: "+
+              puzzle[row][col]);
+            }
           }
         }
       }
     }
     
-    var socket = io();
     // access dom for canvas
     var canvas = document.getElementById("puzzle");
     var ctx = canvas.getContext("2d");
     canvas.height = canvas.width;
     var numRows = 5;
     var cellSize = canvas.width/numRows;
-    var cfg = {
-      numRows: numRows,
-      numCols: numRows,
+    var viewCfg = {
       cellSize: cellSize,
-      startSym: "0",
-      targetSym: "X",
-      obstacleSym: "#",
-      emptySym: " ",
-      startColor: "blue",
+      playerColor: "blue",
       targetColor: "pink",
       obstacleColor: "black",
       emptyColor: "white"
     };
-    drawFromString(cfg, ctx, "0   #"+
-                             "# #  "+
-                             "   ##"+
-                             " #  #"+
-                             "### X");
+                            
+    // connect to socket server and register callbacks
+    var socket = io();
+    socket.on("puzzleError", function(msg) {
+      console.log(msg);
+    });
+    socket.on("puzzleUpdate", function(puzzle, puzzleCfg) {
+      drawPuzzle(ctx, JSON.parse(puzzleCfg), viewCfg, JSON.parse(puzzle));
+    });
+    socket.emit("register", "test", "test", true);
+    window.addEventListener("keydown", function(e) {
+      console.log(e);
+      // note: the following code is a deprecated API, but stupid Chrome/Safari
+      // won't implement the new standard
+      switch(e.keyCode) {
+        case 38: {
+          socket.emit("move", "U");
+          break;
+        }
+        case 40: {
+          socket.emit("move", "D");
+          break;
+        }
+        case 37: {
+          socket.emit("move", "L");
+          break;
+        }
+        case 39: {
+          socket.emit("move", "R");
+          break;
+        }
+        default: {
+          return;
+        }
+      }
+    });
   };
 })();
