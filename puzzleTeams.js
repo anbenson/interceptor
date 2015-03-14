@@ -39,7 +39,7 @@ function PuzzleTeams() {
   this.delete = function(socket) {
     if (socket.id in this.socketMap) {
       var struct = this.socketMap[socket.id];
-      if (socket.id === struct.player.id) {
+      if (struct.player && socket.id === struct.player.id) {
         struct.player = null;
       }
       else {
