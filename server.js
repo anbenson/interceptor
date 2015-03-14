@@ -83,6 +83,10 @@ io.on("connection", function(socket) {
       return;
     }
     puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
+    // if win
+    if (puzzle.isWon(team.currPuzzle, team.puzzleConfig)) {
+      puzzleTeams.nextLevel(team);
+    }
     if (team.player) {
       team.player.emit("puzzleUpdate",
                        JSON.stringify(puzzle.removeObstacles(team.currPuzzle,

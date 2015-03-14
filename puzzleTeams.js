@@ -116,6 +116,11 @@ function PuzzleTeams() {
     this.socketMap[socket.id] = team;
     return true;
   };
+  // given a team, loads the puzzle for the next level
+  this.nextLevel = function(team) {
+    loadLevel(team, team.puzzleLevel+1);
+    team.puzzleLevel++;
+  };
 }
 
 module.exports = function() {
