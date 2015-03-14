@@ -75,9 +75,10 @@ io.on("connection", function(socket) {
       return;
     }
     // only move if player
-    if (team.player && socket.id === team.player.id) {
-      puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
+    if (!(team.player && socket.id === team.player.id)) {
+      return;
     }
+    puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
     if (team.player) {
       team.player.emit("puzzleUpdate",
                        JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
