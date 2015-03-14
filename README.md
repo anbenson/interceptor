@@ -29,6 +29,12 @@ Send the `move` event when you wish to move the player. You must be registered f
 Parameters:
 - dir: a string indicating the direction to move in (for one step) - one of `["L", "R", "U", "D"]`. Other values will be ignored. Should be pretty self-explanatory.
 
+### socket.emit("hint", coords)
+Send the `hint` event when you wish to send coordinates of a spot on the board where the player should go (of course, the server may intercept and modify your hint along the way). All `hint` events from the player will be ignored. If successful, both the player and observer will receive the `puzzleUpdate` event.
+
+Parameters:
+- coords: a string of a JSON-encoded array of two elements, which contain the row and column number of the spot the player ought to go.
+
 ### socket.on("puzzleError", function(msg){})
 The `puzzleError` message is sent when...you cause an error. You can do what you like with the message.
 
