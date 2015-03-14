@@ -2,6 +2,25 @@
 // Andrew Benson
 // module that handles puzzleTeams
 
+var levels = require("./levels");
+var loadLevel = function(team, level) {
+  team.puzzleConfig = {};
+  for (var key in levels[level].puzzleConfig) {
+    team.puzzleConfig[key] = levels[level].puzzleConfig[key];
+  }
+  team.puzzleMod = [];
+  for (var i = 0; i < levels[level].puzzleMod.length; i++) {
+    team.puzzleMod[i] = levels[level].puzzleMod[i];
+  }
+  team.currPuzzle = [];
+  for (var row = 0; row < levels[level].currPuzzle.length; row++) {
+    team.currPuzzle.push([]);
+    for (var col = 0; col < levels[level].currPuzzle.length; col++) {
+      team.currPuzzle[row].push(levels[level].currPuzzle[row][col]);
+    }
+  }
+};
+
 // object that keeps track of socket-team associations
 // register sockets with setPlayer and setObserver
 // lookup teams with lookup and delete sockets with delete
@@ -10,25 +29,27 @@ function PuzzleTeams() {
   // maps socket ids to teams
   this.socketMap = {};
   // list of registered teams. should be read-only, except for structs within.
-  this.teams = [{"iden": "test",
-                 "password": "test",
-                 "player": null,
-                 "observer": null,
-                 "observerHint": [0, 1],
-                 "puzzleConfig": {
-                   playerSym: "0",
-                   targetSym: "X",
-                   obstacleSym: "#",
-                   emptySym: " "
-                 },
-                 "puzzleMod": [1, 0], // row, col modification
-                 "puzzleLevel": 1,
-                 "currPuzzle": [["0"," "," "," ","#"],
-                                ["#"," ","#"," "," "],
-                                [" "," "," ","#","#"],
-                                [" ","#"," "," ","#"],
-                                ["#","#","#"," ","X"]]
-                 }];
+  this.teams = [
+                  {
+                    "iden": "test",
+                    "password": "test",
+                    "player": null,
+                    "observer": null,
+                    "observerHint": null,
+                    "puzzleLevel": 0
+                  },
+                  {
+                    "iden": "test2",
+                    "password": "test2",
+                    "player": null,
+                    "observer": null,
+                    "observerHint": null,
+                    "puzzleLevel": 0
+                  }
+               ];
+  for (var i = 0; i < this.teams.length; i++) {
+    loadLevel(this.teams[i], this.teams[i].puzzleLevel);
+  }
   // most methods return a boolean (whether they succeeded)
   
   // given a socket, find the corresponding team if it exists
