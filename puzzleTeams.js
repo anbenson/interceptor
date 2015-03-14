@@ -14,12 +14,15 @@ function PuzzleTeams() {
                  "password": "test",
                  "player": null,
                  "observer": null,
+                 "observerHint": [0, 1],
                  "puzzleConfig": {
                    playerSym: "0",
                    targetSym: "X",
                    obstacleSym: "#",
                    emptySym: " "
                  },
+                 "puzzleMod": [1, 0], // row, col modification
+                 "puzzleLevel": 1,
                  "currPuzzle": [["0"," "," "," ","#"],
                                 ["#"," ","#"," "," "],
                                 [" "," "," ","#","#"],
