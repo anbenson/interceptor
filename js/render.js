@@ -30,8 +30,9 @@
       // restore old color
       ctx.fillStyle = old;
     }
-    
     function drawPuzzle(ctx, puzzleCfg, viewCfg, puzzle) {
+      ctx.clearRect(0, 0, puzzle[0].length*viewCfg.cellSize,
+                          puzzle.length*viewCfg.cellSize);
       for (var row = 0; row < puzzle.length; row++) {
         for (var col = 0; col < puzzle[row].length; col++) {
           switch (puzzle[row][col]) {
