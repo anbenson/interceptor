@@ -1,0 +1,33 @@
+
+html, body {
+  overflow-x: hidden;
+}
+
+.registration-form {
+  padding: 20px;
+}
+
+.main-logo-img {
+  width: 100%;
+}
+
+.main-input {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.start-button {
+  outline: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  color: #9A0303;
+}
+
+.start-button:active {
+  outline: none;
+}
+
+.start-button:focus {
+  outline: none;
+}

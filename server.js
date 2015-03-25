@@ -13,7 +13,7 @@ var puzzle = require("./puzzle");
 // static files
 app.use("/js", express.static(__dirname+"/js"));
 app.use("/css", express.static(__dirname+"/css"));
-
+app.use("/imgs", express.static(__dirname+"/imgs"));
 // http routing
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/html/index.html");

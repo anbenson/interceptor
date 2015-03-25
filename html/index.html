@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>A Simple Renderer</title>
+    <title>Interceptor</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" media="screen" />
-    <script src="js/render.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/thefile.css" media="screen" />
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/render.js"></script>
   </head>
   <body>
     <div class="row">
+      <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 main-logo">
+        <img src="imgs/homepage-logo.png" class="main-logo-img">
+      </div>
+    </div>
+    <div class = "row registration-row">
+      <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12 registration-form">
+        <div class="panel panel-default">
+          <div class="pane panel-heading" style="color:#9A0303;text-align:center;">
+            Register with your team to start!
+          </div>
+          <div class="panel-body">
+            <input class="form-control main-input team-name-input" placeholder="What is your Team name?">
+            <input class="form-control main-input password-input" placeholder="What is your Team's password?">
+            <select class="form-control main-input player-type-input">
+              <option>Observer</option>
+              <option>Mover</option>
+            </select>
+            <button class="btn btn-default start-button" disabled>Start Game!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row game-row" style="display:none;">
       <div class="col-md-6 col-md-offset-3 col-xs-12">
         <canvas id="puzzle" class="col-md-12" style="border: 1px solid black">
           Your browser does not support the canvas element.
