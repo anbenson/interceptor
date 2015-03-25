@@ -75,7 +75,7 @@ function PuzzleTeams() {
     return false;
   };
   // given a socket and identifier, register the socket as a player
-  this.setPlayer = function(socket, iden) {
+  this.setPlayer = function(socket, iden, password) {
     // check socket isn't already registered and team exists without player
     if (socket.id in this.socketMap) {
       return false;
@@ -88,15 +88,30 @@ function PuzzleTeams() {
       }
     }
     if (team === null) {
-      return false;
+      return "Invalid team name";
     }
+
+    // check password
+    if (team.password != password) {
+      return "Invalid password";
+    }
+
+    // check that player isnt already registered
+    if (team.player != null) {
+      if (team.observer != null) {
+        return "Looks like this team has both a Player and Observer! Try another team!"
+      } else {
+        return "Player already registered, try being the Observer"
+      }
+    }
+
     // register socket as player
     team.player = socket;
     this.socketMap[socket.id] = team;
     return true;
   };
   // given a socket and identifier, register the socket as an observer
-  this.setObserver = function(socket, iden) {
+  this.setObserver = function(socket, iden, password) {
     // check socket isn't already registered and team exists without observer
     if (socket.id in this.socketMap) {
       return false;
@@ -109,8 +124,23 @@ function PuzzleTeams() {
       }
     }
     if (team === null) {
-      return false;
+      return "Invalid team name";
     }
+
+    // check password
+    if (team.password != password) {
+      return "Invalid passowrd";
+    }
+
+    // check that observer isnt already registered
+    if (team.player != null) {
+      if (team.observer != null) {
+        return "Looks like this team has both a Player and Observer! Try another team!"
+      } else {
+        return "Observer already registered, try being the Player"
+      }
+    }
+
     // register socket as observer
     team.observer = socket;
     this.socketMap[socket.id] = team;

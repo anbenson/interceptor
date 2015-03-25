@@ -1,6 +1,7 @@
 
 html, body {
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .registration-form {
@@ -30,4 +31,10 @@ html, body {
 
 .start-button:focus {
   outline: none;
+}
+
+.error-msg-text {
+  text-align: center;
+  font-weight: 100;
+  font-size: 200%;
 }

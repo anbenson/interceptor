@@ -38,19 +38,18 @@ io.on("connection", function(socket) {
       socket.emit("puzzleError", "invalid parameters for register");
       return;
     }
-    // for now, ignore the password...
     // register the client
     var success;
     if (isPlayer) {
-      success = puzzleTeams.setPlayer(socket, teamname);
+      success = puzzleTeams.setPlayer(socket, teamname, password);
     }
     else {
-      success = puzzleTeams.setObserver(socket, teamname);
+      success = puzzleTeams.setObserver(socket, teamname, password);
     }
     // log results and send initial puzzle
-    if (!success) {
-      socket.emit("puzzleError", "could not register; are you already "+
-                    " registered, or do you have the wrong password?");
+    if (success != true) {
+      errorMsg = success
+      socket.emit("puzzleError", errorMsg);
       console.log("failed to register "+teamname+" with password "+password+
                   " with "+(isPlayer?"player":"observer"));
       return;

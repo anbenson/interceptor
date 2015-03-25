@@ -2,125 +2,112 @@
 // Andrew Benson
 // Renders a string-encoded puzzle to the canvas.
 
-function beginGame(team_name, password, isPlayer) {
-  // helper functions
-  function drawCell(ctx, cfg, row, col, color, shape) {
-    // save old color, just in case
-    var old = ctx.fillStyle;
-    // set color, and draw shape
-    ctx.fillStyle = color;
-    switch (shape) {
-      case "square": {
-        ctx.fillRect(col*cfg.cellSize, row*cfg.cellSize,
-                     cfg.cellSize, cfg.cellSize);
-        break;
-      }
-      case "circle": {
-        ctx.beginPath();
-        ctx.arc((col+0.5)*cfg.cellSize, (row+0.5)*cfg.cellSize,
-                 0.5*cfg.cellSize, 0, 2*Math.PI, false);
-        ctx.fill();
-        ctx.stroke();
-        break;
-      }
-      default: {
-        console.log("unrecognized shape: "+shape+". continuing.");
-      }
+var currDotInterval = null;
+var currDotTimeout = null;
+var gameStarted = false;
+var socket = io();
+var player_type;
+var canvas;
+var ctx;
+var viewCfg;
+
+var parsedPuzzleCfg;
+var parsedPuzzle;
+var parsedHint;
+
+function load_globals() {
+  canvas = document.getElementById("puzzle");
+  ctx = canvas.getContext("2d");
+}
+
+function drawCell(ctx, cfg, row, col, color, shape) {
+  // save old color, just in case
+  var old = ctx.fillStyle;
+  // set color, and draw shape
+  ctx.fillStyle = color;
+  switch (shape) {
+    case "square": {
+      ctx.fillRect(col*cfg.cellSize, row*cfg.cellSize,
+                   cfg.cellSize, cfg.cellSize);
+      break;
     }
-    // restore old color
-    ctx.fillStyle = old;
+    case "circle": {
+      ctx.beginPath();
+      ctx.arc((col+0.5)*cfg.cellSize, (row+0.5)*cfg.cellSize,
+               0.5*cfg.cellSize, 0, 2*Math.PI, false);
+      ctx.fill();
+      ctx.stroke();
+      break;
+    }
+    default: {
+      console.log("unrecognized shape: "+shape+". continuing.");
+    }
   }
-  function drawPuzzle(ctx, puzzleCfg, viewCfg, puzzle) {
-    ctx.clearRect(0, 0, puzzle[0].length*viewCfg.cellSize,
-                        puzzle.length*viewCfg.cellSize);
-    for (var row = 0; row < puzzle.length; row++) {
-      for (var col = 0; col < puzzle[row].length; col++) {
-        switch (puzzle[row][col]) {
-          case puzzleCfg.playerSym: {
-            drawCell(ctx, viewCfg, row, col, viewCfg.playerColor, "circle");
-            break;
-          }
-          case puzzleCfg.targetSym: {
-            drawCell(ctx, viewCfg, row, col, viewCfg.targetColor, "square");
-            break;
-          }
-          case puzzleCfg.obstacleSym: {
-            drawCell(ctx, viewCfg, row, col, viewCfg.obstacleColor, "square");
-            break;
-          }
-          case puzzleCfg.emptySym: {
-            drawCell(ctx, viewCfg, row, col, viewCfg.emptyColor, "square");
-            break;
-          }
-          default: {
-            console.log("warning: puzzleStr had unexpected symbol: "+
-            puzzle[row][col]);
-          }
+  // restore old color
+  ctx.fillStyle = old;
+}
+
+function drawPuzzle(ctx, puzzleCfg, viewCfg, puzzle) {
+  ctx.clearRect(0, 0, puzzle[0].length*viewCfg.cellSize,
+                      puzzle.length*viewCfg.cellSize);
+  for (var row = 0; row < puzzle.length; row++) {
+    for (var col = 0; col < puzzle[row].length; col++) {
+      switch (puzzle[row][col]) {
+        case puzzleCfg.playerSym: {
+          drawCell(ctx, viewCfg, row, col, viewCfg.playerColor, "circle");
+          break;
+        }
+        case puzzleCfg.targetSym: {
+          drawCell(ctx, viewCfg, row, col, viewCfg.targetColor, "square");
+          break;
+        }
+        case puzzleCfg.obstacleSym: {
+          drawCell(ctx, viewCfg, row, col, viewCfg.obstacleColor, "square");
+          break;
+        }
+        case puzzleCfg.emptySym: {
+          drawCell(ctx, viewCfg, row, col, viewCfg.emptyColor, "square");
+          break;
+        }
+        default: {
+          console.log("warning: puzzleStr had unexpected symbol: "+
+          puzzle[row][col]);
         }
       }
     }
   }
-  var currDotInterval = null;
-  var currDotTimeout = null;
-  function drawBlinkingDot(ctx, puzzleCfg, viewCfg, puzzle, coords, color) {
-    if (!coords) {
-      return;
-    }
-    if (currDotTimeout) {
-      clearTimeout(currDotTimeout);
-    }
-    if (currDotInterval) {
-      clearInterval(currDotInterval);
-    }
-    var blink = function() {
-      var oldColor = ctx.fillStyle;
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc((coords[1]+0.5)*viewCfg.cellSize,
-              (coords[0]+0.5)*viewCfg.cellSize,
-              0.2*viewCfg.cellSize, 0, 2*Math.PI, false);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = oldColor;
-      currDotTimeout = setTimeout(function() {
-        drawPuzzle(ctx, puzzleCfg, viewCfg, puzzle);
-      }, 400);
-    };
-    blink();
-    currDotInterval = setInterval(blink, 500);
+}
+
+function drawBlinkingDot(ctx, puzzleCfg, viewCfg, puzzle, coords, color) {
+  if (!coords) {
+    return;
   }
-  
-  // access dom for canvas
-  var canvas = document.getElementById("puzzle");
-  var ctx = canvas.getContext("2d");
-  canvas.height = canvas.width;
-  var numRows = 5;
-  var cellSize = canvas.width/numRows;
-  var viewCfg = {
-    cellSize: cellSize,
-    playerColor: "blue",
-    targetColor: "pink",
-    obstacleColor: "black",
-    emptyColor: "white"
+  if (currDotTimeout) {
+    clearTimeout(currDotTimeout);
+  }
+  if (currDotInterval) {
+    clearInterval(currDotInterval);
+  }
+  var blink = function() {
+    var oldColor = ctx.fillStyle;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc((coords[1]+0.5)*viewCfg.cellSize,
+            (coords[0]+0.5)*viewCfg.cellSize,
+            0.2*viewCfg.cellSize, 0, 2*Math.PI, false);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = oldColor;
+    currDotTimeout = setTimeout(function() {
+      drawPuzzle(ctx, puzzleCfg, viewCfg, puzzle);
+    }, 400);
   };
-                          
-  // connect to socket server and register callbacks
-  var socket = io();
-  socket.on("puzzleError", function(msg) {
-    console.log(msg);
-  });
-  socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint) {
-    var parsedPuzzleCfg = JSON.parse(puzzleCfg);
-    var parsedPuzzle = JSON.parse(puzzle);
-    var parsedHint = JSON.parse(observerHint);
-    drawPuzzle(ctx, parsedPuzzleCfg, viewCfg, parsedPuzzle);
-    drawBlinkingDot(ctx, parsedPuzzleCfg, viewCfg, parsedPuzzle, parsedHint,
-                    "red");
-    console.log(observerHint);
-  });
-  socket.emit("register", team_name, password, isPlayer);
+  blink();
+  currDotInterval = setInterval(blink, 500);
+}
+
+function register_key_events() {
   window.addEventListener("keydown", function(e) {
-    console.log(e);
     // note: the following code is a deprecated API, but stupid Chrome/Safari
     // won't implement the new standard
     switch(e.keyCode) {
@@ -147,10 +134,58 @@ function beginGame(team_name, password, isPlayer) {
   });
 };
 
+function redraw_all() {
+  drawPuzzle(ctx, parsedPuzzleCfg, viewCfg, parsedPuzzle);
+  drawBlinkingDot(ctx, parsedPuzzleCfg, viewCfg, parsedPuzzle, parsedHint,
+                    "red");
+}
+
+function register_socket_handlers() {                
+  // connect to socket server and register callbacks
+  socket.on("puzzleError", function(msg) {
+    if (!gameStarted) {
+      $(".error-msg-text").text(msg);
+    }
+  });
+  socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint) {
+    // if game hasnt started yet then initialize the view and controllers
+    // to begin
+    if (!gameStarted) {
+      gameStarted = true;
+      $(".registration-row").hide(1000);
+      $(".game-row").show(1000);
+      $(".error-msg-text").text("");
+      player_type = $(".player-type-input").val();
+      register_key_events();
+    }
+    parsedPuzzleCfg = JSON.parse(puzzleCfg);
+    parsedPuzzle = JSON.parse(puzzle);
+    parsedHint = JSON.parse(observerHint);
+    redraw_all();
+    console.log(observerHint);
+  });
+}
+
+function resize_page_handle() {
+  canvas.height = $(window).height() - Math.max(230, $(".logo-row").height());
+  canvas.width = canvas.height;
+  var numRows = 5;
+  var cellSize = canvas.width/numRows;
+  viewCfg = {
+    cellSize: cellSize,
+    playerColor: "blue",
+    targetColor: "pink",
+    obstacleColor: "black",
+    emptyColor: "white"
+  };
+  if (gameStarted)
+    redraw_all();
+}
+
 login_data = {
   team_name: "",
   pw: "",
-  player_type: ""
+  player_type: "Observer"
 }
 
 function can_click_start() {
@@ -191,15 +226,19 @@ function load_click_handlers() {
 
   $(".start-button").click(function() {
     var isPlayer;
-    if (login_data.player_type == "observer") isPlayer = false;
+    if (login_data.player_type == "Observer") isPlayer = false;
     else isPlayer = true;
-    beginGame(login_data.team_name, login_data.pw, isPlayer);
-    $(".registration-row").hide(1000);
-    $(".game-row").show(1000);
-  })
+    console.log(isPlayer);
+    socket.emit("register", login_data.team_name, login_data.pw, isPlayer);
+  });
 }
 
+window.onresize = resize_page_handle;
+
 $(document).ready(function() {
+  load_globals();
+  resize_page_handle();
+  register_socket_handlers();
   load_click_handlers()
 })
 

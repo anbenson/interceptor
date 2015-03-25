@@ -16,7 +16,7 @@
     <script src="js/render.js"></script>
   </head>
   <body>
-    <div class="row">
+    <div class="row logo-row">
       <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 main-logo">
         <img src="imgs/homepage-logo.png" class="main-logo-img">
       </div>
@@ -28,6 +28,8 @@
             Register with your team to start!
           </div>
           <div class="panel-body">
+            <div class="error-msg-text">
+            </div>
             <input class="form-control main-input team-name-input" placeholder="What is your Team name?">
             <input class="form-control main-input password-input" placeholder="What is your Team's password?">
             <select class="form-control main-input player-type-input">
@@ -35,13 +37,13 @@
               <option>Mover</option>
             </select>
             <button class="btn btn-default start-button" disabled>Start Game!</button>
-          </div>
+          </div> 
         </div>
       </div>
     </div>
     <div class="row game-row" style="display:none;">
       <div class="col-md-6 col-md-offset-3 col-xs-12">
-        <canvas id="puzzle" class="col-md-12" style="border: 1px solid black">
+        <canvas id="puzzle"style="border: 1px solid black">
           Your browser does not support the canvas element.
           Download Chrome you hippie
         </canvas>
