@@ -134,10 +134,32 @@ function register_key_events() {
   });
 };
 
+function register_mouse_events() {
+  if (player_type == "Observer") {
+    canvas.addEventListener("click", function(event) {
+      var x = event.layerX
+      var y = event.layerY;
+      var row = Math.floor((x % canvas.width) / viewCfg.cellSize);
+      var col = Math.floor(y / viewCfg.cellSize);
+      socket.emit("hint", JSON.stringify([row, col]));
+    });
+  }
+}
+
 function redraw_all() {
   drawPuzzle(ctx, parsedPuzzleCfg, viewCfg, parsedPuzzle);
   drawBlinkingDot(ctx, parsedPuzzleCfg, viewCfg, parsedPuzzle, parsedHint,
                     "red");
+}
+
+function initGame() {
+  gameStarted = true;
+  $(".registration-row").hide(1000);
+  $(".game-row").show(1000);
+  $(".error-msg-text").text("");
+  player_type = $(".player-type-input").val();
+  register_key_events();
+  register_mouse_events();
 }
 
 function register_socket_handlers() {                
@@ -151,12 +173,7 @@ function register_socket_handlers() {
     // if game hasnt started yet then initialize the view and controllers
     // to begin
     if (!gameStarted) {
-      gameStarted = true;
-      $(".registration-row").hide(1000);
-      $(".game-row").show(1000);
-      $(".error-msg-text").text("");
-      player_type = $(".player-type-input").val();
-      register_key_events();
+      initGame();
     }
     parsedPuzzleCfg = JSON.parse(puzzleCfg);
     parsedPuzzle = JSON.parse(puzzle);
@@ -167,8 +184,13 @@ function register_socket_handlers() {
 }
 
 function resize_page_handle() {
-  canvas.height = $(window).height() - Math.max(230, $(".logo-row").height());
+  canvas.height = $(window).height() - Math.max(240, $(".logo-row").height());
   canvas.width = canvas.height;
+  if (canvas.height > $(window).width()) {
+    canvas.height = $(window).width() - 30;
+    canvas.width = canvas.height;
+  }
+  
   var numRows = 5;
   var cellSize = canvas.width/numRows;
   viewCfg = {

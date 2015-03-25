@@ -133,8 +133,8 @@ function PuzzleTeams() {
     }
 
     // check that observer isnt already registered
-    if (team.player != null) {
-      if (team.observer != null) {
+    if (team.observer != null) {
+      if (team.player != null) {
         return "Looks like this team has both a Player and Observer! Try another team!"
       } else {
         return "Observer already registered, try being the Player"
