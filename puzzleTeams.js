@@ -129,7 +129,7 @@ function PuzzleTeams() {
 
     // check password
     if (team.password != password) {
-      return "Invalid passowrd";
+      return "Invalid password";
     }
 
     // check that observer isnt already registered
