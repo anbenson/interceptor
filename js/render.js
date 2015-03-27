@@ -132,12 +132,12 @@ function register_key_events() {
       }
     }
   });
-};
+}
 
 function register_mouse_events() {
   if (player_type == "Observer") {
     canvas.addEventListener("click", function(event) {
-      var x = event.layerX
+      var x = event.layerX;
       var y = event.layerY;
       var row = Math.floor((x % canvas.width) / viewCfg.cellSize);
       var col = Math.floor(y / viewCfg.cellSize);
@@ -162,7 +162,7 @@ function initGame() {
   register_mouse_events();
 }
 
-function register_socket_handlers() {                
+function register_socket_handlers() {
   // connect to socket server and register callbacks
   socket.on("puzzleError", function(msg) {
     if (!gameStarted) {
@@ -208,7 +208,7 @@ login_data = {
   team_name: "",
   pw: "",
   player_type: "Observer"
-}
+};
 
 function can_click_start() {
   if (login_data.team_name.length < 1) return false;
@@ -261,6 +261,5 @@ $(document).ready(function() {
   load_globals();
   resize_page_handle();
   register_socket_handlers();
-  load_click_handlers()
-})
-
+  load_click_handlers();
+});
