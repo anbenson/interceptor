@@ -151,6 +151,10 @@ function PuzzleTeams() {
     loadLevel(team, team.puzzleLevel+1);
     team.puzzleLevel++;
   };
+  // resets the given teams current level to its starting configuration
+  this.resetLevel = function(team) {
+    loadLevel(team, team.puzzleLevel);
+  };
 }
 
 module.exports = function() {

@@ -19,13 +19,15 @@ module.exports = {
       }
     }
     if (startRow === null || startCol === null) {
-      return false;
+      return "no playerSym";
     }
     // make movement if possible
     switch(dir) {
       case "L": {
-        if (startCol === 0 ||
-            puzzle[startRow][startCol-1] === config.obstacleSym) {
+        if (startCol === 0) {
+          return "invalid move";
+        }
+        if (puzzle[startRow][startCol-1] === config.obstacleSym) {
           return false;
         }
         puzzle[startRow][startCol] = config.emptySym;
@@ -33,8 +35,10 @@ module.exports = {
         break;
       }
       case "R": {
-        if (startCol === puzzle[startRow].length-1 ||
-            puzzle[startRow][startCol+1] === config.obstacleSym) {
+        if (startCol === puzzle[startRow].length-1) {
+          return "invalid move";
+        }
+        if (puzzle[startRow][startCol+1] === config.obstacleSym) {
           return false;
         }
         puzzle[startRow][startCol] = config.emptySym;
@@ -42,8 +46,10 @@ module.exports = {
         break;
       }
       case "U": {
-        if (startRow === 0 ||
-            puzzle[startRow-1][startCol] === config.obstacleSym) {
+        if (startRow === 0) {
+          return "invalid move";
+        }
+        if (puzzle[startRow-1][startCol] === config.obstacleSym) {
           return false;
         }
         puzzle[startRow][startCol] = config.emptySym;
@@ -51,8 +57,10 @@ module.exports = {
         break;
       }
       case "D": {
-        if (startRow === puzzle.length-1 ||
-            puzzle[startRow+1][startCol] === config.obstacleSym) {
+        if (startRow === puzzle.length-1) {
+          return "invalid move";
+        }
+        if (puzzle[startRow+1][startCol] === config.obstacleSym) {
           return false;
         }
         puzzle[startRow][startCol] = config.emptySym;

@@ -14,6 +14,7 @@ var puzzle = require("./puzzle");
 app.use("/js", express.static(__dirname+"/js"));
 app.use("/css", express.static(__dirname+"/css"));
 app.use("/imgs", express.static(__dirname+"/imgs"));
+
 // http routing
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/html/index.html");
@@ -23,7 +24,7 @@ app.get("/", function(req, res) {
 // clients must be able to receive the following events:
 // puzzleError, puzzleUpdate
 // clients must be able to send the following events:
-// register, move
+// register, move, hint
 io.on("connection", function(socket) {
   console.log("new connection...");
   // register: register socket with team in server records so we know who they
@@ -81,7 +82,19 @@ io.on("connection", function(socket) {
     if (!(team.player && socket.id === team.player.id)) {
       return;
     }
-    puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
+    // actually try to move
+    var result = puzzle.move(team.currPuzzle, team.puzzleConfig, dir);
+    
+    // ignore moves off the board
+    if (result === "invalid move") {
+      return;
+    }
+    
+    // reset the board if the move hit an obstacle
+    if (result === false) {
+      puzzleTeams.resetLevel(team);
+    }
+    
     // if win
     if (puzzle.isWon(team.currPuzzle, team.puzzleConfig)) {
       puzzleTeams.nextLevel(team);
