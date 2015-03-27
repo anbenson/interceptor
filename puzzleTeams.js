@@ -97,11 +97,11 @@ function PuzzleTeams() {
     }
 
     // check that player isnt already registered
-    if (team.player != null) {
-      if (team.observer != null) {
-        return "Looks like this team has both a Player and Observer! Try another team!"
+    if (team.player !== null) {
+      if (team.observer !== null) {
+        return "Looks like this team has both a Player and Observer! Try another team!";
       } else {
-        return "Player already registered, try being the Observer"
+        return "Player already registered, try being the Observer";
       }
     }
 
@@ -133,11 +133,11 @@ function PuzzleTeams() {
     }
 
     // check that observer isnt already registered
-    if (team.observer != null) {
-      if (team.player != null) {
-        return "Looks like this team has both a Player and Observer! Try another team!"
+    if (team.observer !== null) {
+      if (team.player !== null) {
+        return "Looks like this team has both a Player and Observer! Try another team!";
       } else {
-        return "Observer already registered, try being the Player"
+        return "Observer already registered, try being the Player";
       }
     }
 

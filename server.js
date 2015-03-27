@@ -47,8 +47,8 @@ io.on("connection", function(socket) {
       success = puzzleTeams.setObserver(socket, teamname, password);
     }
     // log results and send initial puzzle
-    if (success != true) {
-      errorMsg = success
+    if (success !== true) {
+      errorMsg = success;
       socket.emit("puzzleError", errorMsg);
       console.log("failed to register "+teamname+" with password "+password+
                   " with "+(isPlayer?"player":"observer"));
