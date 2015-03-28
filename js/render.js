@@ -5,6 +5,7 @@
 var currDotInterval = null;
 var currDotTimeout = null;
 var gameStarted = false;
+var puzzleSize = 5;
 var socket = io();
 var player_type;
 var canvas;
@@ -177,9 +178,11 @@ function register_socket_handlers() {
     }
     parsedPuzzleCfg = JSON.parse(puzzleCfg);
     parsedPuzzle = JSON.parse(puzzle);
+    puzzleSize = parsedPuzzle.length;
     parsedHint = JSON.parse(observerHint);
     redraw_all();
     console.log(observerHint);
+    resize_page_handle();
   });
 }
 
@@ -191,7 +194,7 @@ function resize_page_handle() {
     canvas.width = canvas.height;
   }
   
-  var numRows = 5;
+  var numRows = puzzleSize;
   var cellSize = canvas.width/numRows;
   viewCfg = {
     cellSize: cellSize,
