@@ -139,8 +139,8 @@ function register_mouse_events() {
     canvas.addEventListener("click", function(event) {
       var x = event.layerX;
       var y = event.layerY;
-      var row = Math.floor((x % canvas.width) / viewCfg.cellSize);
-      var col = Math.floor(y / viewCfg.cellSize);
+      var col = Math.floor((x % canvas.width) / viewCfg.cellSize);
+      var row = Math.floor(y / viewCfg.cellSize);
       socket.emit("hint", JSON.stringify([row, col]));
     });
   }
