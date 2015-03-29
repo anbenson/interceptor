@@ -35,7 +35,7 @@ function PuzzleTeams() {
                     "password": "test",
                     "player": null,
                     "observer": null,
-                    "observerHint": null,
+                    "observerHint": [0,0],
                     "puzzleLevel": 0
                   },
                   {
@@ -43,7 +43,7 @@ function PuzzleTeams() {
                     "password": "test2",
                     "player": null,
                     "observer": null,
-                    "observerHint": null,
+                    "observerHint": [0,0],
                     "puzzleLevel": 0
                   }
                ];
