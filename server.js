@@ -124,8 +124,8 @@ io.on("connection", function(socket) {
     // update observerHint and update everyone
     var parsedCoords = JSON.parse(coords);
     var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
-    var newHint = puzzle.modifyHint(team.currPuzzle, team.observerHint,
-                                                     parsedCoords);
+    var newHint = team.calculateHint(team.currPuzzle, team.observerHint,
+                                                      parsedCoords);
     team.observerHint = newHint;
     if (team.player) {
       updateClient(team.player, clearPuzzle, team.puzzleConfig, newHint);

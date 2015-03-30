@@ -11,6 +11,12 @@ module.exports = [
       emptySym: " ",
       level: 0
     },
+    "calculateHint": function(puzzle, currHint, click) {
+      if (!currHint) {
+        return click;
+      }
+      return [click[1], click[0]]; // switch row, col
+    },
     "currPuzzle": [["0"," "," "," ","#"],
                    ["#","#","#"," ","#"],
                    [" "," "," "," "," "],
@@ -25,6 +31,12 @@ module.exports = [
       emptySym: " ",
       level: 1
     },
+    "calculateHint": function(puzzle, currHint, click) {
+      if (!currHint) {
+        return click;
+      }
+      return [click[1], click[0]]; // switch row, col
+    },
     "currPuzzle": [["0"," "," "," ","#"],
                    ["#"," ","#"," "," "],
                    [" "," ","#","#","#"],
@@ -38,6 +50,12 @@ module.exports = [
       obstacleSym: "#",
       emptySym: " ",
       level: 1
+    },
+    "calculateHint": function(puzzle, currHint, click) {
+      if (!currHint) {
+        return click;
+      }
+      return [click[1], click[0]]; // switch row, col
     },
     "currPuzzle": [["0","#"," "," "," "," ","#"," "," "," ",],
                    [" ","#"," ","#","#","#"," "," ","#"," ",],
