@@ -135,13 +135,34 @@ function register_key_events() {
   });
 }
 
+// credit for this function comes from
+// http://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
+function relMouseCoords(event){
+    var totalOffsetX = 0;
+    var totalOffsetY = 0;
+    var canvasX = 0;
+    var canvasY = 0;
+    var currentElement = this;
+
+    do{
+        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+    }
+    while(currentElement = currentElement.offsetParent);
+
+    canvasX = event.pageX - totalOffsetX;
+    canvasY = event.pageY - totalOffsetY;
+
+    return {x:canvasX, y:canvasY};
+}
+HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
+
 function register_mouse_events() {
   if (player_type == "Observer") {
     canvas.addEventListener("click", function(event) {
-      var x = event.layerX;
-      var y = event.layerY;
-      var col = Math.floor((x % canvas.width) / viewCfg.cellSize);
-      var row = Math.floor(y / viewCfg.cellSize);
+      coords = canvas.relMouseCoords(event);
+      var row = Math.floor(coords.y / viewCfg.cellSize);
+      var col = Math.floor(coords.x / viewCfg.cellSize);
       socket.emit("hint", JSON.stringify([row, col]));
     });
   }
