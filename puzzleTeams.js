@@ -98,7 +98,7 @@ function PuzzleTeams() {
       if (team.observer !== null) {
         return "Looks like this team has both a Player and Observer! Try another team!";
       } else {
-        return "Player already registered, try being the Observer";
+        return "Mover already registered, try being the Observer";
       }
     }
 
@@ -134,7 +134,7 @@ function PuzzleTeams() {
       if (team.player !== null) {
         return "Looks like this team has both a Player and Observer! Try another team!";
       } else {
-        return "Observer already registered, try being the Player";
+        return "Observer already registered, try being the Mover";
       }
     }
 
