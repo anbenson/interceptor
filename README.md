@@ -54,4 +54,6 @@ playerSym   | string | the character used to denote the player's position in the
 targetSym   | string | the character used to denote the position in the puzzle the player is trying to get to
 obstacleSym | string | the character used to denote an obstacle in the puzzle
 emptySym    | string | the character used to denote an empty space in the puzzle
+level       | number | the level number of the puzzle
+state       | string | one of "normal", "reset", or "newLevel". describes the sent puzzle
 - observerHint: an array of length 2 in JSON form containing coordinates in the puzzle where the observer thinks the player should go (but modified by the server). can also be null or empty.
