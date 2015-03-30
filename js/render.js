@@ -70,6 +70,10 @@ function drawPuzzle(ctx, puzzleCfg, viewCfg, puzzle) {
           drawCell(ctx, viewCfg, row, col, viewCfg.emptyColor, "square");
           break;
         }
+        case puzzleCfg.teleSym: {
+          drawCell(ctx, viewCfg, row, col, viewCfg.teleColor, "square");
+          break;
+        }
         default: {
           console.log("warning: puzzleStr had unexpected symbol: "+
           puzzle[row][col]);
@@ -223,7 +227,8 @@ function resize_page_handle() {
     playerColor: "blue",
     targetColor: "pink",
     obstacleColor: "black",
-    emptyColor: "white"
+    emptyColor: "white",
+    teleColor: "green",
   };
   if (gameStarted)
     redraw_all();
