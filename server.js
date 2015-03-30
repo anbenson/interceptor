@@ -27,11 +27,11 @@ app.get("/", function(req, res) {
 // register, move, hint
 io.on("connection", function(socket) {
     // this function updates both the observer and the player
-  var updateClient = function(socket, puzzle, config, hint, level) {
+  var updateClient = function(socket, puzzle, config, hint) {
     var jpuzzle = JSON.stringify(puzzle);
     var jconfig = JSON.stringify(config);
     var jhint = JSON.stringify(hint);
-    socket.emit("puzzleUpdate", jpuzzle, jconfig, jhint, level);
+    socket.emit("puzzleUpdate", jpuzzle, jconfig, jhint);
   };
   console.log("new connection...");
   // register: register socket with team in server records so we know who they
@@ -62,10 +62,10 @@ io.on("connection", function(socket) {
     var team = puzzleTeams.lookup(socket);
     var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
     if (isPlayer) {
-      updateClient(socket, clearPuzzle, team.puzzleConfig, team.observerHint, team.puzzleLevel);
+      updateClient(socket, clearPuzzle, team.puzzleConfig, team.observerHint);
     }
     else {
-      updateClient(socket,team.currPuzzle,team.puzzleConfig,team.observerHint, team.puzzleLevel);
+      updateClient(socket,team.currPuzzle,team.puzzleConfig,team.observerHint);
     }
     console.log("registered "+teamname+" with "+(isPlayer?"player":"observer"));
   });
@@ -106,11 +106,11 @@ io.on("connection", function(socket) {
     
     var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
     if (team.player) {
-      updateClient(team.player,clearPuzzle,team.puzzleConfig,team.observerHint, team.puzzleLevel);
+      updateClient(team.player,clearPuzzle,team.puzzleConfig,team.observerHint);
     }
     if (team.observer) {
       updateClient(team.observer, team.currPuzzle, team.puzzleConfig,
-                                                   team.observerHint, puzzleLevel);
+                                                   team.observerHint);
     }
   });
   socket.on("hint", function(coords) {

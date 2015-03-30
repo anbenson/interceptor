@@ -192,15 +192,14 @@ function register_socket_handlers() {
       $(".error-msg-text").text(msg);
     }
   });
-  socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint, level) {
+  socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint) {
     // if game hasnt started yet then initialize the view and controllers
     // to begin
-    $(".level-number").text("Level: " + (level + 1));
     if (!gameStarted) {
       initGame();
     }
     parsedPuzzleCfg = JSON.parse(puzzleCfg);
-    // $(".level-number").text("Level: " + parsedPuzzleCfg.level);
+    $(".level-number").text("Level: " + parsedPuzzleCfg.level);
     parsedPuzzle = JSON.parse(puzzle);
     puzzleSize = parsedPuzzle.length;
     parsedHint = JSON.parse(observerHint);
