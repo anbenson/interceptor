@@ -277,6 +277,11 @@ function load_click_handlers() {
     console.log(isPlayer);
     socket.emit("register", login_data.team_name, login_data.pw, isPlayer);
   });
+
+  $(".instructions-button").click(function() {
+    $(".instructions-row").hide(500);
+    $(".registration-row").show(500);
+  })
 }
 
 window.onresize = resize_page_handle;

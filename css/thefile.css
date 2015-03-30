@@ -1,20 +1,49 @@
+* {
+  font-family: 'Open Sans', sans-serif;
+}
 
 html, body {
   overflow-x: hidden;
   overflow-y: hidden;
 }
 
+.instruction-form {
+  padding: 20px;
+}
+
 .registration-form {
   padding: 20px;
+}
+
+.page-title {
+  font-size: 300%;
+  font-weight: 700;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .main-logo-img {
   width: 100%;
 }
 
+.instructions-text {
+  font-weight: 100;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 .main-input {
   margin-top: 15px;
   margin-bottom: 15px;
+}
+
+.instructions-button {
+  outline: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  color: #9A0303;
 }
 
 .start-button {
