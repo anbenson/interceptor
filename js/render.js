@@ -178,6 +178,7 @@ function initGame() {
   gameStarted = true;
   $(".registration-row").hide(1000);
   $(".game-row").show(1000);
+  $(".level-row").show(1000);
   $(".error-msg-text").text("");
   player_type = $(".player-type-input").val();
   register_key_events();
@@ -191,24 +192,25 @@ function register_socket_handlers() {
       $(".error-msg-text").text(msg);
     }
   });
-  socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint) {
+  socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint, level) {
     // if game hasnt started yet then initialize the view and controllers
     // to begin
+    $(".level-number").text("Level: " + (level + 1));
     if (!gameStarted) {
       initGame();
     }
     parsedPuzzleCfg = JSON.parse(puzzleCfg);
+    // $(".level-number").text("Level: " + parsedPuzzleCfg.level);
     parsedPuzzle = JSON.parse(puzzle);
     puzzleSize = parsedPuzzle.length;
     parsedHint = JSON.parse(observerHint);
     redraw_all();
-    console.log(observerHint);
     resize_page_handle();
   });
 }
 
 function resize_page_handle() {
-  canvas.height = $(window).height() - Math.max(240, $(".logo-row").height());
+  canvas.height = $(window).height() - Math.max(240, $(".logo-row").height()) - 60;
   canvas.width = canvas.height;
   if (canvas.height > $(window).width()) {
     canvas.height = $(window).width() - 30;

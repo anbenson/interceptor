@@ -41,7 +41,7 @@ The `puzzleError` message is sent when...you cause an error. You can do what you
 Parameters:
 - msg: a string containing an error message. typically unhelpful.
 
-### socket.on("puzzleUpdate", function(puzzle, puzzleConfig, observerHint){})
+### socket.on("puzzleUpdate", function(puzzle, puzzleConfig, observerHint, level){})
 The `puzzleUpdate` message is sent whenever the puzzle state has changed, or whenever the server feels like it. It's best not to wonder why and to just draw the puzzle.
 
 Parameters:

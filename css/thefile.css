@@ -23,6 +23,14 @@ html, body {
   padding-bottom: 15px;
 }
 
+.level-number {
+  text-align: center;
+  font-size: 300%;
+  font-weight: 100;
+  margin-top: -25px;
+  margin-bottom: 25px;
+}
+
 .main-logo-img {
   width: 100%;
 }
