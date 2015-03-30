@@ -8,10 +8,6 @@ var loadLevel = function(team, level) {
   for (var key in levels[level].puzzleConfig) {
     team.puzzleConfig[key] = levels[level].puzzleConfig[key];
   }
-  team.puzzleMod = [];
-  for (var i = 0; i < levels[level].puzzleMod.length; i++) {
-    team.puzzleMod[i] = levels[level].puzzleMod[i];
-  }
   team.currPuzzle = [];
   for (var row = 0; row < levels[level].currPuzzle.length; row++) {
     team.currPuzzle.push([]);

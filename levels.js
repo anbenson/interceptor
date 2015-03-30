@@ -11,7 +11,6 @@ module.exports = [
       emptySym: " ",
       level: 0
     },
-    "puzzleMod": [0, 0], // row, col modification
     "currPuzzle": [["0"," "," "," ","#"],
                    ["#","#","#"," ","#"],
                    [" "," "," "," "," "],
@@ -26,7 +25,6 @@ module.exports = [
       emptySym: " ",
       level: 1
     },
-    "puzzleMod": [1,0],
     "currPuzzle": [["0"," "," "," ","#"],
                    ["#"," ","#"," "," "],
                    [" "," ","#","#","#"],
@@ -41,7 +39,6 @@ module.exports = [
       emptySym: " ",
       level: 1
     },
-    "puzzleMod": [1,0],
     "currPuzzle": [["0","#"," "," "," "," ","#"," "," "," ",],
                    [" ","#"," ","#","#","#"," "," ","#"," ",],
                    [" ","#"," "," "," "," ","#"," ","#"," ",],
