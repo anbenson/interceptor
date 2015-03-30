@@ -26,6 +26,13 @@ app.get("/", function(req, res) {
 // clients must be able to send the following events:
 // register, move, hint
 io.on("connection", function(socket) {
+    // this function updates both the observer and the player
+  var updateClient = function(socket, puzzle, config, hint) {
+    var jpuzzle = JSON.stringify(puzzle);
+    var jconfig = JSON.stringify(config);
+    var jhint = JSON.stringify(hint);
+    socket.emit("puzzleUpdate", jpuzzle, jconfig, jhint);
+  };
   console.log("new connection...");
   // register: register socket with team in server records so we know who they
   // are on future messages
@@ -53,20 +60,12 @@ io.on("connection", function(socket) {
       return;
     }
     var team = puzzleTeams.lookup(socket);
+    var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
     if (isPlayer) {
-      socket.emit("puzzleUpdate",
-                  JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
-                                                        team.puzzleConfig)),
-                  JSON.stringify(team.puzzleConfig),
-                  JSON.stringify(puzzle.modifyHint(team.currPuzzle,
-                                                   team.observerHint,
-                                                   team.puzzleMod)));
+      updateClient(socket, clearPuzzle, team.puzzleConfig, team.observerHint);
     }
     else {
-      socket.emit("puzzleUpdate",
-                  JSON.stringify(team.currPuzzle),
-                  JSON.stringify(team.puzzleConfig),
-                  JSON.stringify(team.observerHint));
+      updateClient(socket,team.currPuzzle,team.puzzleConfig,team.observerHint);
     }
     console.log("registered "+teamname+" with "+(isPlayer?"player":"observer"));
   });
@@ -97,22 +96,17 @@ io.on("connection", function(socket) {
     
     // if win
     if (puzzle.isWon(team.currPuzzle, team.puzzleConfig)) {
+      team.observerHint = [0,0];
       puzzleTeams.nextLevel(team);
     }
+    
+    var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
     if (team.player) {
-      team.player.emit("puzzleUpdate",
-                       JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
-                                                           team.puzzleConfig)),
-                       JSON.stringify(team.puzzleConfig),
-                       JSON.stringify(puzzle.modifyHint(team.currPuzzle,
-                                                        team.observerHint,
-                                                        team.puzzleMod)));
+      updateClient(team.player,clearPuzzle,team.puzzleConfig,team.observerHint);
     }
     if (team.observer) {
-      team.observer.emit("puzzleUpdate",
-                         JSON.stringify(team.currPuzzle),
-                         JSON.stringify(team.puzzleConfig),
-                         JSON.stringify(team.observerHint));
+      updateClient(team.observer, team.currPuzzle, team.puzzleConfig,
+                                                   team.observerHint);
     }
   });
   socket.on("hint", function(coords) {
@@ -129,21 +123,15 @@ io.on("connection", function(socket) {
     }
     // update observerHint and update everyone
     var parsedCoords = JSON.parse(coords);
-    team.observerHint = parsedCoords;
+    var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
+    var newHint = puzzle.modifyHint(team.currPuzzle, team.observerHint,
+                                                     parsedCoords);
+    team.observerHint = newHint;
     if (team.player) {
-      team.player.emit("puzzleUpdate",
-                       JSON.stringify(puzzle.removeObstacles(team.currPuzzle,
-                                                           team.puzzleConfig)),
-                       JSON.stringify(team.puzzleConfig),
-                       JSON.stringify(puzzle.modifyHint(team.currPuzzle,
-                                                        team.observerHint,
-                                                        team.puzzleMod)));
+      updateClient(team.player, clearPuzzle, team.puzzleConfig, newHint);
     }
     if (team.observer) {
-      team.observer.emit("puzzleUpdate",
-                         JSON.stringify(team.currPuzzle),
-                         JSON.stringify(team.puzzleConfig),
-                         JSON.stringify(team.observerHint));
+      updateClient(team.observer, team.currPuzzle, team.puzzleConfig, newHint);
     }
   });
   // disconnect: unregister socket in server records

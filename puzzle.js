@@ -101,18 +101,26 @@ module.exports = {
     return true;
   },
   // the modification made to the observer's hint
-  modifyHint: function(puzzle, hint, mod) {
-    // if there is no hint, don't do anything
-    if (!hint) {
-      return hint;
+  // our current default is to always rotate by -90 degrees
+  modifyHint: function(puzzle, curr, click) {
+    if (!curr) {
+      return click;
     }
-    var newHint = [hint[0], hint[1]];
-    if (!(hint[0]+mod[0] < 0 || hint[0]+mod[0] > puzzle.length-1)) {
-      newHint[0] = hint[0]+mod[0];
-    }
-    if (!(hint[1]+mod[1] < 0 || hint[1]+mod[1] > puzzle[0].length-1)) {
-      newHint[1] = hint[1]+mod[1];
-    }
-    return newHint;
+    return [click[1],click[0]];
+    // // calculate deltas. note that we get row, col
+    // var dx = curr[1] - click[1];
+    // var dy = -(curr[0] - click[0]); // because top row is 0
+    //
+    // // derived from matrix rotation for -90 degrees
+    // var rx = -1*dy;
+    // var ry = dx;
+    // var newrow = click[0] - ry; // again, because top row is 0
+    // var newcol = click[1] + rx;
+    //
+    // // why am i doing this? because freakin' JS mods negative numbers wrong
+    // var modnewrow = (newrow + puzzle.length) % puzzle.length;
+    // var modnewcol = (newcol + puzzle[0].length) % puzzle[0].length;
+    //
+    // return [modnewrow, modnewcol];
   }
 };
