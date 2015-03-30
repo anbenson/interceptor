@@ -236,6 +236,11 @@ login_data = {
   player_type: "Observer"
 };
 
+function initialize_login_data() {
+  login_data.team_name = $(".team-name-input").val();
+  login_data.pw = $(".password-input").val();
+}
+
 function can_click_start() {
   if (login_data.team_name.length < 1) return false;
   if (login_data.pw.length < 1) return false;
@@ -290,6 +295,8 @@ window.onresize = resize_page_handle;
 
 $(document).ready(function() {
   load_globals();
+  initialize_login_data();
+  toggle_button_active();
   resize_page_handle();
   register_socket_handlers();
   load_click_handlers();
