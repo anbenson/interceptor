@@ -9,7 +9,8 @@ module.exports = [
       targetSym: "X",
       obstacleSym: "#",
       emptySym: " ",
-      level: 0
+      level: 0,
+      state: "normal"
     },
     "calculateHint": function(puzzle, currHint, click) {
       if (!currHint) {

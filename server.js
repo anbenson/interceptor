@@ -92,12 +92,16 @@ io.on("connection", function(socket) {
     // reset the board if the move hit an obstacle
     if (result === false) {
       puzzleTeams.resetLevel(team);
+      team.puzzleConfig.state = "reset";
     }
-    
     // if win
-    if (puzzle.isWon(team.currPuzzle, team.puzzleConfig)) {
+    else if (puzzle.isWon(team.currPuzzle, team.puzzleConfig)) {
       team.observerHint = [0,0];
       puzzleTeams.nextLevel(team);
+      team.puzzleConfig.state = "newLevel";
+    }
+    else {
+      team.puzzleConfig.state = "normal";
     }
     
     var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
