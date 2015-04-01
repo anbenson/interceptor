@@ -14,7 +14,13 @@ module.exports = [
       emptySym: " ",
       teleSym: "T",
       level: 0,
-      state: "normal"
+      state: "normal",
+      keybindings: {
+        "U": "U",
+        "D": "D",
+        "L": "L",
+        "R": "R"
+      }
     },
     "calculateHint": function(puzzle, currHint, click) {
       return click;
@@ -33,7 +39,13 @@ module.exports = [
       emptySym: " ",
       teleSym: "T",
       level: 1,
-      state: "normal"
+      state: "normal",
+      keybindings: {
+        "U": "U",
+        "D": "D",
+        "L": "L",
+        "R": "R"
+      }
     },
     "calculateHint": function(puzzle, currHint, click) {
       if (!currHint) {
@@ -55,7 +67,13 @@ module.exports = [
       emptySym: " ",
       teleSym: "T",
       level: 2,
-      state: "normal"
+      state: "normal",
+      keybindings: {
+        "U": "U",
+        "D": "D",
+        "L": "R",
+        "R": "L"
+      }
     },
     "calculateHint": function(puzzle, currHint, click) {
       if (!currHint) {
@@ -77,7 +95,13 @@ module.exports = [
       emptySym: " ",
       teleSym: "T",
       level: 3,
-      state: "normal"
+      state: "normal",
+      keybindings: {
+        "U": "D",
+        "D": "U",
+        "L": "L",
+        "R": "R"
+      }
     },
     "calculateHint": function(puzzle, currHint, click) {
       if (!currHint) {
@@ -108,7 +132,13 @@ module.exports = [
       emptySym: " ",
       teleSym: "T",
       level: 4,
-      state: "normal"
+      state: "normal",
+      keybindings: {
+        "U": "L",
+        "D": "U",
+        "L": "R",
+        "R": "D"
+      }
     },
     "calculateHint": function(puzzle, currHint, click) {
       if (!currHint) {

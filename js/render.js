@@ -16,6 +16,13 @@ var parsedPuzzleCfg;
 var parsedPuzzle;
 var parsedHint;
 
+var keybindings = {
+  "U": "U",
+  "D": "D",
+  "L": "L",
+  "R": "R"
+};
+
 function load_globals() {
   canvas = document.getElementById("puzzle");
   ctx = canvas.getContext("2d");
@@ -117,19 +124,19 @@ function register_key_events() {
     // won't implement the new standard
     switch(e.keyCode) {
       case 38: {
-        socket.emit("move", "U");
+        socket.emit("move", keybindings.U);
         break;
       }
       case 40: {
-        socket.emit("move", "D");
+        socket.emit("move", keybindings.D);
         break;
       }
       case 37: {
-        socket.emit("move", "L");
+        socket.emit("move", keybindings.L);
         break;
       }
       case 39: {
-        socket.emit("move", "R");
+        socket.emit("move", keybindings.R);
         break;
       }
       default: {
@@ -205,6 +212,7 @@ function register_socket_handlers() {
     parsedPuzzle = JSON.parse(puzzle);
     puzzleSize = parsedPuzzle.length;
     parsedHint = JSON.parse(observerHint);
+    keybindings = parsedPuzzleCfg.keybindings;
     redraw_all();
     resize_page_handle();
   });
