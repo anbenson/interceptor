@@ -99,6 +99,10 @@ io.on("connection", function(socket) {
       team.observerHint = [0,0];
       puzzleTeams.nextLevel(team);
       team.puzzleConfig.state = "newLevel";
+      // switch player and observer
+      var temp = team.player;
+      team.player = team.observer;
+      team.observer = temp;
     }
     else {
       team.puzzleConfig.state = "normal";

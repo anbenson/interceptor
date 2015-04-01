@@ -162,14 +162,12 @@ function relMouseCoords(event){
 HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
 function register_mouse_events() {
-  if (player_type == "Observer") {
-    canvas.addEventListener("click", function(event) {
-      coords = canvas.relMouseCoords(event);
-      var row = Math.floor(coords.y / viewCfg.cellSize);
-      var col = Math.floor(coords.x / viewCfg.cellSize);
-      socket.emit("hint", JSON.stringify([row, col]));
-    });
-  }
+  canvas.addEventListener("click", function(event) {
+    coords = canvas.relMouseCoords(event);
+    var row = Math.floor(coords.y / viewCfg.cellSize);
+    var col = Math.floor(coords.x / viewCfg.cellSize);
+    socket.emit("hint", JSON.stringify([row, col]));
+  });
 }
 
 function redraw_all() {
