@@ -61,7 +61,7 @@ module.exports = [
       if (!currHint) {
         return click;
       }
-      return [puzzle.length-click[1], puzzle[0].length-click[0]];
+      return [puzzle.length-1-click[1], puzzle[0].length-1-click[0]];
     },
     "currPuzzle": [["0"," ","#"," ","T"],
                    ["#"," "," "," ","#"],
