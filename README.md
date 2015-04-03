@@ -41,7 +41,7 @@ The `puzzleError` message is sent when...you cause an error. You can do what you
 Parameters:
 - msg: a string containing an error message. typically unhelpful.
 
-### socket.on("puzzleUpdate", function(puzzle, puzzleConfig, observerHint){})
+### socket.on("puzzleUpdate", function(puzzle, puzzleConfig, observerHint, answer){})
 The `puzzleUpdate` message is sent whenever the puzzle state has changed, or whenever the server feels like it. It's best not to wonder why and to just draw the puzzle.
 
 Parameters:
@@ -57,3 +57,4 @@ emptySym    | string | the character used to denote an empty space in the puzzle
 level       | number | the level number of the puzzle
 state       | string | one of "normal", "reset", or "newLevel". describes the sent puzzle
 - observerHint: an array of length 2 in JSON form containing coordinates in the puzzle where the observer thinks the player should go (but modified by the server). can also be null or empty.
+- answer: a JSON-encoded string containing the password for finishing the puzzle on the puzzlehunt website. if the game is not won yet, answer will be null (but in JSON form).
