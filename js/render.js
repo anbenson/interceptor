@@ -201,7 +201,7 @@ function register_socket_handlers() {
       $(".error-msg-text").text(msg);
     }
   });
-  socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint) {
+  socket.on("puzzleUpdate", function(puzzle, puzzleCfg, observerHint, ans) {
     // if game hasnt started yet then initialize the view and controllers
     // to begin
     if (!gameStarted) {
@@ -213,6 +213,11 @@ function register_socket_handlers() {
     puzzleSize = parsedPuzzle.length;
     parsedHint = JSON.parse(observerHint);
     keybindings = parsedPuzzleCfg.keybindings;
+    parsedAns = JSON.parse(ans);
+    if (parsedAns) {
+      alert("Congratulations! You've won the puzzle. Enter this password "+
+                        "at the website:\n"+parsedAns);
+    }
     redraw_all();
     resize_page_handle();
   });

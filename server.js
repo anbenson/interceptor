@@ -27,11 +27,13 @@ app.get("/", function(req, res) {
 // register, move, hint
 io.on("connection", function(socket) {
     // this function updates both the observer and the player
-  var updateClient = function(socket, puzzle, config, hint) {
+  var updateClient = function(socket, puzzle, config, hint, inPlay) {
     var jpuzzle = JSON.stringify(puzzle);
     var jconfig = JSON.stringify(config);
     var jhint = JSON.stringify(hint);
-    socket.emit("puzzleUpdate", jpuzzle, jconfig, jhint);
+    var ans = "what would dijkstra do";
+    var jans = JSON.stringify(inPlay ? null : ans);
+    socket.emit("puzzleUpdate", jpuzzle, jconfig, jhint, jans);
   };
   console.log("new connection...");
   // register: register socket with team in server records so we know who they
@@ -62,10 +64,12 @@ io.on("connection", function(socket) {
     var team = puzzleTeams.lookup(socket);
     var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
     if (isPlayer) {
-      updateClient(socket, clearPuzzle, team.puzzleConfig, team.observerHint);
+      updateClient(socket, clearPuzzle, team.puzzleConfig, team.observerHint,
+                                                           team.inPlay);
     }
     else {
-      updateClient(socket,team.currPuzzle,team.puzzleConfig,team.observerHint);
+      updateClient(socket, team.currPuzzle, team.puzzleConfig,
+                           team.observerHint, team.inPlay);
     }
     console.log("registered "+teamname+" with "+(isPlayer?"player":"observer"));
   });
@@ -102,7 +106,10 @@ io.on("connection", function(socket) {
     // if win
     else if (puzzle.isWon(team.currPuzzle, team.puzzleConfig)) {
       team.observerHint = [0,0];
-      puzzleTeams.nextLevel(team);
+      var newLevelExists = puzzleTeams.nextLevel(team);
+      if (!newLevelExists) {
+        team.inPlay = false;
+      }
       team.puzzleConfig.state = "newLevel";
       // switch player and observer
       var temp = team.player;
@@ -115,11 +122,12 @@ io.on("connection", function(socket) {
     
     var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
     if (team.player) {
-      updateClient(team.player,clearPuzzle,team.puzzleConfig,team.observerHint);
+      updateClient(team.player, clearPuzzle, team.puzzleConfig,
+                                team.observerHint, team.inPlay);
     }
     if (team.observer) {
       updateClient(team.observer, team.currPuzzle, team.puzzleConfig,
-                                                   team.observerHint);
+                                  team.observerHint, team.inPlay);
     }
   });
   socket.on("hint", function(coords) {
@@ -146,10 +154,12 @@ io.on("connection", function(socket) {
                                                       parsedCoords);
     team.observerHint = newHint;
     if (team.player) {
-      updateClient(team.player, clearPuzzle, team.puzzleConfig, newHint);
+      updateClient(team.player, clearPuzzle, team.puzzleConfig, newHint,
+                                                                team.inPlay);
     }
     if (team.observer) {
-      updateClient(team.observer, team.currPuzzle, team.puzzleConfig, newHint);
+      updateClient(team.observer, team.currPuzzle, team.puzzleConfig, newHint,
+                                                   team.inPlay);
     }
   });
   // disconnect: unregister socket in server records
