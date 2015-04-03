@@ -77,6 +77,11 @@ io.on("connection", function(socket) {
       socket.emit("puzzleError", "please register first");
       return;
     }
+    // only move if in play
+    if (!team.inPlay) {
+      socket.emit("puzzleError", "looks like you've already won!");
+      return;
+    }
     // only move if player
     if (!(team.player && socket.id === team.player.id)) {
       return;
@@ -123,6 +128,11 @@ io.on("connection", function(socket) {
     // only accept hints if registered
     if (!team) {
       socket.emit("puzzleError", "please register first");
+      return;
+    }
+    // only accept hints if in play
+    if (!team.inPlay) {
+      socket.emit("puzzleError", "looks like you've already won!");
       return;
     }
     // only accept hints if observer

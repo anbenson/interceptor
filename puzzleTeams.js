@@ -33,7 +33,8 @@ function PuzzleTeams() {
                     "player": null,
                     "observer": null,
                     "observerHint": [0,0],
-                    "puzzleLevel": 0
+                    "puzzleLevel": 0,
+                    "inPlay": true
                   },
                   {
                     "iden": "test2",
@@ -41,7 +42,8 @@ function PuzzleTeams() {
                     "player": null,
                     "observer": null,
                     "observerHint": [0,0],
-                    "puzzleLevel": 0
+                    "puzzleLevel": 0,
+                    "inPlay": true
                   }
                ];
   for (var i = 0; i < this.teams.length; i++) {
@@ -144,9 +146,15 @@ function PuzzleTeams() {
     return true;
   };
   // given a team, loads the puzzle for the next level
+  // returns whether the operation succeeded
   this.nextLevel = function(team) {
+    // if we're out of levels, signal this
+    if (team.puzzleLevel == levels.length-1) {
+      return false;
+    }
     loadLevel(team, team.puzzleLevel+1);
     team.puzzleLevel++;
+    return true;
   };
   // resets the given teams current level to its starting configuration
   this.resetLevel = function(team) {
