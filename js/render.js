@@ -296,7 +296,6 @@ function load_click_handlers() {
     var isPlayer;
     if (login_data.player_type == "Observer") isPlayer = false;
     else isPlayer = true;
-    console.log(isPlayer);
     socket.emit("register", login_data.team_name, login_data.pw, isPlayer);
   });
 
