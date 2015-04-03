@@ -48,10 +48,7 @@ module.exports = [
       }
     },
     "calculateHint": function(puzzle, currHint, click) {
-      if (!currHint) {
-        return click;
-      }
-      return [click[1], click[0]]; // switch row, col
+      return click;
     },
     "currPuzzle": [["#"," "," "," ","0"],
                    [" "," ","#"," ","#"],
@@ -107,11 +104,7 @@ module.exports = [
       if (!currHint) {
         return click;
       }
-      var drow = currHint[0] - click[0];
-      var dcol = currHint[1] - click[1];
-      var nrow = (currHint[0] + drow + puzzle.length) % puzzle.length;
-      var ncol = (currHint[1] + dcol + puzzle[0].length) % puzzle[0].length;
-      return [nrow, ncol];
+      return [click[1], click[0]]; // switch row, col
     },
     "currPuzzle": [["0","#"," "," "," "," ","#"," "," "," ",],
                    [" ","#"," ","#","#","#"," "," ","#"," ",],
@@ -134,17 +127,21 @@ module.exports = [
       level: 4,
       state: "normal",
       keybindings: {
-        "U": "L",
-        "D": "U",
-        "L": "R",
-        "R": "D"
+        "U": "R",
+        "D": "L",
+        "L": "D",
+        "R": "U"
       }
     },
     "calculateHint": function(puzzle, currHint, click) {
       if (!currHint) {
         return click;
       }
-      return [click[1], click[0]]; // switch row, col
+      var drow = currHint[0] - click[0];
+      var dcol = currHint[1] - click[1];
+      var nrow = (currHint[0] + drow + puzzle.length) % puzzle.length;
+      var ncol = (currHint[1] + dcol + puzzle[0].length) % puzzle[0].length;
+      return [nrow, ncol];
     },
     "currPuzzle": [[" ","T","#","#"," "," "," "," "," ","X",],
                    [" ","#"," "," "," ","#","#"," ","#","#",],
@@ -156,5 +153,42 @@ module.exports = [
                    [" ","#"," ","#"," "," "," "," ","#"," ",],
                    [" ","#"," ","#"," ","#","#"," "," "," ",],
                    [" "," "," ","#"," "," ","T","#"," ","#",]]
+  },
+  {
+    "puzzleConfig": {
+      playerSym: "0",
+      targetSym: "X",
+      obstacleSym: "#",
+      emptySym: " ",
+      teleSym: "T",
+      level: 5,
+      state: "normal",
+      keybindings: {
+        "U": "L",
+        "D": "U",
+        "L": "R",
+        "R": "D"
+      }
+    },
+    "calculateHint": function(puzzle, currHint, click) {
+      if (!currHint) {
+        return click;
+      }
+      var drow = currHint[0] - click[0];
+      var dcol = currHint[1] - click[1];
+      var nrow = (currHint[0] + drow + puzzle.length) % puzzle.length;
+      var ncol = (currHint[1] + dcol + puzzle[0].length) % puzzle[0].length;
+      return [nrow, ncol];
+    },
+    "currPuzzle": [[" "," "," "," "," ","#"," "," "," "," ",],
+                   ["#"," ","#","#"," "," ","#"," ","#"," ",],
+                   [" "," "," "," ","#"," "," "," ","#"," ",],
+                   [" ","#","#"," "," ","#"," ","#"," "," ",],
+                   [" "," "," "," "," "," ","#"," "," ","#",],
+                   ["#","#"," ","#","#"," ","#"," ","#"," ",],
+                   [" "," "," "," "," "," ","#"," "," ","#",],
+                   [" ","#","#"," ","#","#"," ","#"," ","T",],
+                   [" "," "," ","#"," "," ","0","#","#","#",],
+                   [" ","#"," "," "," ","#","#","X"," ","T",]]
   }
 ];
