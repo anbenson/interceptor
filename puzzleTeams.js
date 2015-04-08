@@ -2,6 +2,7 @@
 // Andrew Benson
 // module that handles puzzleTeams
 
+var teams = require("./teams");
 var levels = require("./levels");
 var loadLevel = function(team, level) {
   team.puzzleConfig = {};
@@ -25,29 +26,17 @@ var loadLevel = function(team, level) {
 function PuzzleTeams() {
   // maps socket ids to teams
   this.socketMap = {};
-  // list of registered teams. should be read-only, except for structs within.
-  this.teams = [
-                  {
-                    "iden": "test",
-                    "password": "test",
-                    "player": null,
-                    "observer": null,
-                    "observerHint": [0,0],
-                    "puzzleLevel": 0,
-                    "inPlay": true
-                  },
-                  {
-                    "iden": "test2",
-                    "password": "test2",
-                    "player": null,
-                    "observer": null,
-                    "observerHint": [0,0],
-                    "puzzleLevel": 0,
-                    "inPlay": true
-                  }
-               ];
-  for (var i = 0; i < this.teams.length; i++) {
-    loadLevel(this.teams[i], this.teams[i].puzzleLevel);
+  // load the teams
+  this.teams = [];
+  for (var i = 0; i < teams.length; i++) {
+    this.teams.push({});
+    for (var key in teams[i]) {
+      this.teams[i][key] = teams[i][key];
+    }
+  }
+  // load the levels
+  for (var j = 0; j < this.teams.length; j++) {
+    loadLevel(this.teams[j], this.teams[j].puzzleLevel);
   }
   // most methods return a boolean (whether they succeeded)
   
