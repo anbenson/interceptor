@@ -86,6 +86,29 @@ io.on("connection", function(socket) {
       socket.emit("puzzleError", "looks like you've already won!");
       return;
     }
+    // cheat code to pass level
+    if (dir === "konamicode") {
+      team.observerHint = [0,0];
+      var newLevelExists = puzzleTeams.nextLevel(team);
+      if (!newLevelExists) {
+        team.inPlay = false;
+      }
+      team.puzzleConfig.state = "newLevel";
+      // switch player and observer
+      var temp = team.player;
+      team.player = team.observer;
+      team.observer = temp;
+      var clearPuzzle = puzzle.removeObstacles(team.currPuzzle,team.puzzleConfig);
+      if (team.player) {
+        updateClient(team.player, clearPuzzle, team.puzzleConfig,
+                                  team.observerHint, team.inPlay);
+      }
+      if (team.observer) {
+        updateClient(team.observer, team.currPuzzle, team.puzzleConfig,
+                                    team.observerHint, team.inPlay);
+      }
+      return;
+    }
     // only move if player
     if (!(team.player && socket.id === team.player.id)) {
       return;
