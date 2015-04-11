@@ -4,6 +4,7 @@
 
 var currDotInterval = null;
 var currDotTimeout = null;
+var borderTimeouts = [null, null, null, null, null];
 var gameStarted = false;
 var puzzleSize = 5;
 var socket = io();
@@ -116,6 +117,29 @@ function drawBlinkingDot(ctx, puzzleCfg, viewCfg, puzzle, coords, color) {
   };
   blink();
   currDotInterval = setInterval(blink, 500);
+}
+
+function animateBorder(color) {
+  var border = $("#puzzle");
+  var delay = 80;
+  var turnColor = function() {
+    border.css("border-color", color);
+  };
+  var turnDefault = function() {
+    border.css("border-color", "black");
+  };
+  for (var i = 0; i < borderTimeouts.length; i++) {
+    if (borderTimeouts[i]) {
+      clearTimeout(borderTimeouts[i]);
+      borderTimeouts[i] = null;
+    }
+  }
+  border.css("border-color", color);
+  borderTimeouts[0] = setTimeout(turnDefault, delay);
+  borderTimeouts[1] = setTimeout(turnColor, 2*delay);
+  borderTimeouts[2] = setTimeout(turnDefault, 3*delay);
+  borderTimeouts[3] = setTimeout(turnColor, 4*delay);
+  borderTimeouts[4] = setTimeout(turnDefault, 5*delay);
 }
 
 function register_key_events() {
@@ -235,6 +259,14 @@ function register_socket_handlers() {
     if (parsedAns) {
       alert("Congratulations! You've won the puzzle. Enter this password "+
                         "at the website:\n"+parsedAns);
+    }
+    // visual effects for reset and win
+    var delay = 1000;
+    if (parsedPuzzleCfg.state === "reset") {
+      animateBorder("red");
+    }
+    else if (parsedPuzzleCfg.state === "newLevel") {
+      animateBorder("green");
     }
     redraw_all();
     resize_page_handle();
