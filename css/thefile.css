@@ -82,5 +82,5 @@ html, body {
 
 #puzzle {
   display: inline;
+  border: 1px solid black;
 }
-
