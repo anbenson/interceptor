@@ -119,6 +119,24 @@ function drawBlinkingDot(ctx, puzzleCfg, viewCfg, puzzle, coords, color) {
 }
 
 function register_key_events() {
+  // touches
+  $(function() {
+    $("#puzzle").swipe({
+      swipeLeft: function(event, direction, distance, duration, fingerCount) {
+        socket.emit("move", keybindings.L);
+      },
+      swipeRight: function(event, direction, distance, duration, fingerCount) {
+        socket.emit("move", keybindings.R);
+      },
+      swipeUp: function(event, direction, distance, duration, fingerCount) {
+        socket.emit("move", keybindings.U);
+      },
+      swipeDown: function(event, direction, distance, duration, fingerCount) {
+        socket.emit("move", keybindings.D);
+      }
+    });
+  });
+  // keys
   window.addEventListener("keydown", function(e) {
     // note: the following code is a deprecated API, but stupid Chrome/Safari
     // won't implement the new standard
